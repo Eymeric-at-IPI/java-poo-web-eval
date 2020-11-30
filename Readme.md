@@ -15,7 +15,7 @@
 - [x] Paramétrer le fichier application.properties pour se connecter à la base de données précédemment créée 
 - [x] Créer les classes (dans le bon package) permettant de modéliser les objets de l'application et mettre en place le mapping adéquat
 - [x] Créer les repository (dans le bon package) permettant d'accéder aux données de la base
-- [ ] ? Créer éventuellement un MyRunner (comme dans le TP) pour tester vos repository et s'assurer que la récupération de données se passent bien
+- [x] Créer éventuellement un MyRunner (comme dans le TP) pour tester vos repository et s'assurer que la récupération de données se passent bien
 
 ### Si vous avez le temps pendant votre eLearning)
 
