@@ -1,30 +1,36 @@
 package com.java.eval.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name="Artist")
+@Table(name="artist")
 public class Artist {
-
-    //private static final long serialVersionUID = -633481376872387016L; // TODO: what does it mean ?
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ArtistId")
-    private Integer m_id;
+    private Integer id;
 
     @Size(max = 120)
     @Column(name = "Name")
-    private String m_name;
+    private String name;
+
+    @OneToMany(mappedBy = "artist")
+    @JsonIgnoreProperties("artist") // prevent recursion loop
+    private List<Album> albums;
 
     public Artist() {
 
     }
 
-    public Artist(String _name) {
-        this.m_name = _name;
+    public Artist(String _name, List<Album> _albums) {
+        this.name = _name;
+        this.albums = _albums;
     }
 
     // ############
@@ -32,11 +38,15 @@ public class Artist {
     // ############
 
     public Integer getId() {
-        return m_id;
+        return id;
     }
 
     public String getName() {
-        return m_name;
+        return name;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
     }
 
     // ############
@@ -44,11 +54,15 @@ public class Artist {
     // ############
 
     public void setId(Integer _id) {
-        this.m_id = _id;
+        this.id = _id;
     }
 
     public void setName(String _name) {
-        this.m_name = _name;
+        this.name = _name;
+    }
+
+    public void setAlbums(List<Album> _albums) {
+        this.albums = _albums;
     }
 
     // #############
@@ -58,31 +72,30 @@ public class Artist {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Artist{");
-        sb.append("nom='").append(m_name).append('\'');
+        sb.append("nom='").append(name).append('\'');
+        sb.append(", Albums='").append(albums.toString()).append('\'');
         sb.append('}');
+
         return sb.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (!(o instanceof Artist)) return false;
 
         Artist artist = (Artist) o;
 
-        if (this.m_name != null ? !this.m_name.equals(artist.getName()) : !artist.getName().equals(null)) return false;
-
-        return true;
+        return Objects.equals(id, artist.getId()) &&
+                Objects.equals(name, artist.getName()) &&
+                Objects.equals(albums, artist.getAlbums());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(m_name);
+        return Objects.hash(id, name, albums);
     }
 
-    // TODO : util ?
-    public String getType() {
-        return this.getClass().getSimpleName().toLowerCase();
-    }
 
 }

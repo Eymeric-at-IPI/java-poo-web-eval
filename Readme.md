@@ -19,7 +19,7 @@
 
 ### Si vous avez le temps pendant votre eLearning)
 
-- [ ] Télécharger le client Web pour l'éval : https://github.com/pjvilloud/ipi-mdd-050-eval-web/releases/download/V1.2/ipi-mdd-050-eval-web-v1.2.zip
+- [x] Télécharger le client Web pour l'éval : https://github.com/pjvilloud/ipi-mdd-050-eval-web/releases/download/V1.2/ipi-mdd-050-eval-web-v1.2.zip
 - [ ] Ajouter les classes nécessaires afin de créer un service web permettant de :
     - [ ] Afficher un artiste (gérer les 404)
     - [ ] Recherche par nom
