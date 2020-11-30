@@ -13,18 +13,18 @@ public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ArtistId")
-    private Integer id;
+    private Integer m_id;
 
     @Size(max = 120)
     @Column(name = "Name")
-    private String name;
+    private String m_name;
 
     public Artist() {
 
     }
 
     public Artist(String _name) {
-        this.name = _name;
+        this.m_name = _name;
     }
 
     // ############
@@ -32,11 +32,11 @@ public class Artist {
     // ############
 
     public Integer getId() {
-        return id;
+        return m_id;
     }
 
     public String getName() {
-        return name;
+        return m_name;
     }
 
     // ############
@@ -44,11 +44,11 @@ public class Artist {
     // ############
 
     public void setId(Integer _id) {
-        this.id = _id;
+        this.m_id = _id;
     }
 
     public void setName(String _name) {
-        this.name = _name;
+        this.m_name = _name;
     }
 
     // #############
@@ -58,7 +58,7 @@ public class Artist {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Artist{");
-        sb.append("nom='").append(name).append('\'');
+        sb.append("nom='").append(m_name).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -70,14 +70,14 @@ public class Artist {
 
         Artist artist = (Artist) o;
 
-        if (this.name != null ? !this.name.equals(artist.name) : !artist.name.equals(null)) return false;
+        if (this.m_name != null ? !this.m_name.equals(artist.getName()) : !artist.getName().equals(null)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(m_name);
     }
 
     // TODO : util ?
