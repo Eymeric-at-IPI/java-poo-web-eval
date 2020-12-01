@@ -29,19 +29,20 @@ public class SimpleCorsFilter implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "user-agent, host, accept, accept-language, accept-encoding, dnt, content-type, refererer, content-length, connection, x-requested-with, authorization, access-control-allow-origin, cache-control, pragma, withCredentials");
 
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
             response.setStatus(HttpServletResponse.SC_OK);
-        } else {
+        else
             chain.doFilter(req, res);
-        }
     }
 
     @Override
     public void init(FilterConfig filterConfig) {
+
     }
 
     @Override
     public void destroy() {
+
     }
 
 }

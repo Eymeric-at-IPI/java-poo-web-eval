@@ -1,5 +1,6 @@
 package com.java.eval.web.service;
 
+import com.java.eval.web.model.Album;
 import com.java.eval.web.model.Artist;
 import com.java.eval.web.repository.AlbumRepository;
 import com.java.eval.web.repository.ArtistRepository;
@@ -12,10 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -37,15 +36,13 @@ public class ArtistService {
 
     public Artist findById(Integer _id) {
         Optional<Artist> artist = artistRepository.findById(_id);
-        if(artist.isEmpty()){ // Gestion error 404
+        if(artist.isEmpty()) // Gestion error 404
             throw new EntityNotFoundException("L'artist d'identifiant " + _id + " n'a pas été trouvé.");
-        }
 
         return artist.get();
     }
 
     public List<Artist> findByNameLike(String _name) {
-        System.out.println("##########> findByNameLike");
         return artistRepository.findByNameLike("%" + _name + "%");
     }
 
@@ -59,33 +56,44 @@ public class ArtistService {
             String _sortProperty,
             Sort.Direction _sortDirection) {
 
-
-        System.out.println("##########> listArtists");
-
         //Vérification de sortProperty
-        if(Arrays.stream(Artist.class.getDeclaredFields()).
-                map(Field::getName).
-                filter(s -> s.equals(_sortProperty)).count() != 1){
+        if(Arrays.stream( Artist.class.getDeclaredFields() ).map( Field::getName ).filter( s -> s.equals(_sortProperty) ).count() != 1)
             throw new IllegalArgumentException("La propriété " + _sortProperty + " n'existe pas !");
-        };
 
         Pageable pageable = PageRequest.of(_page, _size, _sortDirection, _sortProperty);
         Page<Artist> artists = artistRepository.findAll(pageable);
 
-        if(_page >= artists.getTotalPages()){
+        if(_page >= artists.getTotalPages())
             throw new IllegalArgumentException("Le numéro de page ne peut être supérieur à " + artists.getTotalPages());
-        } else if(artists.getTotalElements() == 0){
+        else if(artists.getTotalElements() == 0)
             throw new EntityNotFoundException("Il n'y a aucun artist dans la base de données");
-        }
 
         return artists;
     }
 
     public Artist addArtist(Artist _artist) {
         if (artistRepository.findByName(_artist.getName()) != null)
-            throw new EntityExistsException("Un artiste avec le même nom existe déjà !");
+            throw new EntityExistsException("Un artiste avec le même nom existe déjà en BDD !");
 
         return artistRepository.save(_artist);
+    }
+
+    public Artist updateArtist(Artist _artist) {
+        if (artistRepository.findById(_artist.getId()).isEmpty())
+            throw new EntityNotFoundException("L'artiste que vous essayer de modifier n'existe pas en BDD !");
+
+        return artistRepository.save(_artist);
+    }
+
+    public void deleteArtist(Integer _id) {
+        if (artistRepository.findById(_id).isEmpty()) // Exception redondante ?
+            new EntityNotFoundException("L'artiste avdec l'identifiant " + _id + " n'existe pas en BDD !");
+
+        List<Album> albums = albumRepository.findByArtistId(_id);
+        for (Album album : albums)
+            albumRepository.deleteById(album.getId());
+
+        artistRepository.deleteById(_id);
     }
 
 }

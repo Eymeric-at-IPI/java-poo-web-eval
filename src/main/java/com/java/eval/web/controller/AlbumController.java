@@ -1,11 +1,12 @@
 package com.java.eval.web.controller;
 
+import com.java.eval.web.model.Album;
 import com.java.eval.web.repository.AlbumRepository;
+import com.java.eval.web.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,11 +15,26 @@ import java.util.List;
 public class AlbumController {
 
     @Autowired
-    private AlbumRepository albumRepository;
+    private AlbumService albumService;
 
-    @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public List Albums_homePage() {
+    /**
+     * Permet d'ajouter un album
+     *
+     * @param _album instance d'un album crée via autowired et data du POST
+     */
+    @RequestMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public Album addAlbum(@RequestBody Album _album){
+        return albumService.addAlbum(_album);
+    }
 
-        return albumRepository.findAll();
+    /**
+     * Permet de supprimé un album
+     *
+     * @param _id identifiant technique de l'album a supprimer
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAlbum(@PathVariable("id") Integer _id) {
+        albumService.deleteAlbum(_id);
     }
 }

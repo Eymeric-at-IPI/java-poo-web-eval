@@ -1,11 +1,11 @@
 package com.java.eval.web.controller;
 
 import com.java.eval.web.model.Artist;
-import com.java.eval.web.repository.ArtistRepository;
 import com.java.eval.web.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,20 +21,18 @@ public class ArtistController {
     /**
      * Permet de récupérer les informations d'un artiste à partir de son identifiant technique
      *
-     * @param id Identifiant technique de l'artiste
+     * @param _id Identifiant technique de l'artiste
      * @return l'artiste si l'identifiant est trouvé ou une erreur 404 sinon.
      */
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public Artist Artist_byId(@PathVariable("id") Integer _id) {
-
         return artistService.findById(_id);
     }
 
-    // TODO : paginé ?
     /**
      * Permet de récupérer les informations d'un artiste à partir de tout ou d'une partie de sont nom
      *
-     * @param name tout ou partie du nom de l'artiste
+     * @param _name tout ou partie du nom de l'artiste
      * @return une liste d'artiste avec les correspondance trouvé.
      */
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, params = "name")
@@ -45,10 +43,10 @@ public class ArtistController {
     /**
      * Permet de récupérer les artistes de manière paginée et triée
      *
-     * @param page Numéro de la page en partant de 0
-     * @param size Taille de la page
-     * @param sortDirection Tri ascendant ASC ou descendant DESC
-     * @param sortProperty Propriété utilisée par le tri
+     * @param _page Numéro de la page en partant de 0
+     * @param _size Taille de la page
+     * @param _sortDirection Tri ascendant ASC ou descendant DESC
+     * @param _sortProperty Propriété utilisée par le tri
      * @return Une page contenant les artistes
      */
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -57,16 +55,39 @@ public class ArtistController {
             @RequestParam(value = "size", defaultValue = "10") Integer _size,
             @RequestParam(value = "sortProperty", defaultValue = "name") String _sortProperty,
             @RequestParam(value = "sortDirection", defaultValue = "ASC") Sort.Direction _sortDirection){
-
-        // le href du lien capture le comptenu du champ de recherche !
-
         return artistService.listArtists(_page, _size, _sortProperty, _sortDirection);
     }
 
-
-    @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    /**
+     * Permet d'ajouter un artiste
+     *
+     * @param _artist instance d'un artiste crée via autowired et data du POST
+     */
+    @RequestMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Artist addArtist(@RequestBody Artist _artist){
         return artistService.addArtist(_artist);
+    }
+
+    /**
+     * Permet de modifier un artiste
+     *
+     * @param _id identifiant technique
+     * @param _artist instance d'un artiste crée via autowired et data du POST
+     */
+    @RequestMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+    public Artist updateArtist(@PathVariable("id") Integer _id, @RequestBody Artist _artist){
+        return artistService.updateArtist(_artist);
+    }
+
+    /**
+     * Permet de supprimé un artiste
+     *
+     * @param _id identifiant technique de l'artiste a supprimer
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteArtist(@PathVariable("id") Integer _id){
+        artistService.deleteArtist(_id);
     }
 
 }
